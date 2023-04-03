@@ -6,7 +6,7 @@ def func(value, s):
     if value == s:
         con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?')
     else:
-        con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?')
+        con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s))
     return con
 
 def generate():
@@ -39,7 +39,7 @@ def fill_table(data, window):
     window['-ANSWER-'].Update('')
     for j in range(2):
         for i in range(5):
-            window[str(j*4+i+1)].Update(data[j][i])
+            window[str(j*5+i+1)].Update(data[j][i])
 
 def main(): 
     data = generate()
@@ -50,7 +50,7 @@ def main():
         row = []
         for i in range(5):
             row.append(sg.Text(data[j][i], 
-                 key = str(j*4+i+1),
+                 key = str(j*5+i+1),
                  size=(4,1), 
                  background_color='#808080', 
                  pad=(1,1)))
