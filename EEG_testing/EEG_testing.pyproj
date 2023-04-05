@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5ff10dd5-ca06-4cb0-a206-f7434c7d9695</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>eeg_receiver.py</StartupFile>
+    <StartupFile>testing_main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

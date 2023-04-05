@@ -1,8 +1,9 @@
 # -*- coding: cp1251 -*-
 import PySimpleGUI as sg
 import random as rd
-import asyncio
+import threading
 import eeg_receiver
+
 
 def func(value, s):
     if value == s:
@@ -81,31 +82,30 @@ def main():
 
     window = sg.Window('Window', layout)
 
+    stop_event = threading.Event()
     eeg_receiver.prepare()
+    grab_thread = threading.Thread(target=eeg_receiver.grab_data, args=(stop_event,))
+    grab_thread.start()
 
-    loop = asyncio.get_event_loop()
-    loop.create_task(main_loop(loop, window, data))
-    loop.create_task(eeg_receiver.grab_data(loop))
-    loop.run_forever()
+    while True:
+        event, values = window.read()
+        print(event, values)
+        if event == '-FUNCTION-':
+            if values['-ANSWER-'] == '':
+                continue
+            try:
+                con = func(float(values['-ANSWER-']), data[2])
+                if con == "No":
+                    break
+                else:
+                    data = generate()
+                    fill_table(data, window)
+            except:
+                sg.PopupOK('Используйте точку, как разделитель')
 
+        if event == sg.WIN_CLOSED:
+            break
+
+    stop_event.set()
+    grab_thread.join()
     window.Close()
-
-
-def main_loop(loop, window, data):
-    event, values = window.read()
-    print(event, values)
-    if event == '-FUNCTION-':
-        if values['-ANSWER-'] == '':
-            continue
-        try:
-            con = func(float(values['-ANSWER-']), data[2])
-            if con == "No":
-                break
-            else:
-                data = generate()
-                fill_table(data, window)
-        except:
-            sg.PopupOK('Используйте точку, как разделитель')
-
-    if event == sg.WIN_CLOSED:
-        break
