@@ -1,6 +1,8 @@
 # -*- coding: cp1251 -*-
 import PySimpleGUI as sg
 import random as rd
+import asyncio
+import eeg_receiver
 
 def func(value, s):
     if value == s:
@@ -8,6 +10,7 @@ def func(value, s):
     else:
         con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s))
     return con
+
 
 def generate():
     data = []
@@ -35,11 +38,13 @@ def generate():
     data.append(s)
     return data
 
+
 def fill_table(data, window):
     window['-ANSWER-'].Update('')
     for j in range(2):
         for i in range(5):
             window[str(j*5+i+1)].Update(data[j][i])
+
 
 def main(): 
     data = generate()
@@ -76,23 +81,31 @@ def main():
 
     window = sg.Window('Window', layout)
 
-    while True:
-        event, values = window.read()
-        print(event, values)
-        if event == '-FUNCTION-':
-            if values['-ANSWER-'] == '':
-                continue
-            try:
-                con = func(float(values['-ANSWER-']), data[2])
-                if con == "No":
-                    break
-                else:
-                    data = generate()
-                    fill_table(data, window)
-            except:
-                sg.PopupOK('Используйте точку, как разделитель')
+    eeg_receiver.prepare()
 
-        if event == sg.WIN_CLOSED:
-            break
+    loop = asyncio.get_event_loop()
+    loop.create_task(main_loop(loop, window, data))
+    loop.create_task(eeg_receiver.grab_data(loop))
+    loop.run_forever()
 
     window.Close()
+
+
+def main_loop(loop, window, data):
+    event, values = window.read()
+    print(event, values)
+    if event == '-FUNCTION-':
+        if values['-ANSWER-'] == '':
+            continue
+        try:
+            con = func(float(values['-ANSWER-']), data[2])
+            if con == "No":
+                break
+            else:
+                data = generate()
+                fill_table(data, window)
+        except:
+            sg.PopupOK('Используйте точку, как разделитель')
+
+    if event == sg.WIN_CLOSED:
+        break

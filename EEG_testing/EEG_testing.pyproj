@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5ff10dd5-ca06-4cb0-a206-f7434c7d9695</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>testing_main.py</StartupFile>
+    <StartupFile>eeg_receiver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="eeg_receiver.py" />
     <Compile Include="testing_disp.py" />
     <Compile Include="testing_main.py" />
   </ItemGroup>
