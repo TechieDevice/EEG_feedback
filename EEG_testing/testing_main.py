@@ -1,25 +1,30 @@
-# -*- coding: cp1251 -*-
+п»ї# coding: utf-8
 import PySimpleGUI as sg
 import numpy as np
 import testing_disp
 
 import mne
 
-def disp_window(window):
+def disp_window(window, show_res):
     window.Hide()
-    testing_disp.main()
+    testing_disp.main(show_res)
     window.UnHide()
 
 
 layout = [
      [
-         sg.Text('Задание на нахождение среднего квадратического \n отклонения дискретной случайной величины', 
+         sg.Text('Г‡Г Г¤Г Г­ГЁГҐ Г­Г  Г­Г ГµГ®Г¦Г¤ГҐГ­ГЁГҐ Г±Г°ГҐГ¤Г­ГҐГЈГ® ГЄГўГ Г¤Г°Г ГІГЁГ·ГҐГ±ГЄГ®ГЈГ® \n Г®ГІГЄГ«Г®Г­ГҐГ­ГЁГї Г¤ГЁГ±ГЄГ°ГҐГІГ­Г®Г© Г±Г«ГіГ·Г Г©Г­Г®Г© ГўГҐГ«ГЁГ·ГЁГ­Г»', 
                  size=(45, 2), 
                  key='-text-', 
                  font='Helvetica')
      ],
      [
-        sg.Button('Начать',
+        sg.Checkbox('РџРѕРєР°Р·С‹РІР°С‚СЊ РѕС‚РІРµС‚?',
+               key='show_res', 
+               font='Helvetica')
+     ],
+     [
+        sg.Button('ГЌГ Г·Г ГІГј',
                enable_events=True, 
                key='-START-', 
                font='Helvetica')
@@ -38,7 +43,8 @@ def main():
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == '-START-':
-            disp_window(window)
+            show_res = values['show_res']
+            disp_window(window, show_res)
 
     window.Close()
 

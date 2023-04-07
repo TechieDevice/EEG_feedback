@@ -1,25 +1,37 @@
-# -*- coding: cp1251 -*-
+п»ї# coding: utf-8
 import PySimpleGUI as sg
 import random as rd
+import numpy as np
 import threading
 import eeg_receiver
+import edf_writer
 
 
-def func(value, s):
-    if value == s:
-        con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?')
+def res_check(value, s, show_res):
+    if show_res == True:
+        if value == s:
+            con = sg.popup_yes_no('Г‚ГҐГ°Г­Г»Г© Г®ГІГўГҐГІ \n Г‡Г ГЇГіГ±ГІГЁГІГј Г±Г«ГҐГ¤ГіГѕГ№ГҐГҐ Г§Г Г¤Г Г­ГЁГҐ?')
+        else:
+            con = sg.popup_yes_no('ГЌГҐГўГҐГ°Г­Г»Г© Г®ГІГўГҐГІ, ГўГҐГ°Г­Г»Г© = {} \n Г‡Г ГЇГіГ±ГІГЁГІГј Г±Г«ГҐГ¤ГіГѕГ№ГҐГҐ Г§Г Г¤Г Г­ГЁГҐ?'.format(s))
     else:
-        con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s))
+        if value == s:
+            rnd = rd.randint(1, 10)
+            if rnd > 3:
+                con = sg.popup_yes_no('Г‚ГҐГ°Г­Г»Г© Г®ГІГўГҐГІ \n Г‡Г ГЇГіГ±ГІГЁГІГј Г±Г«ГҐГ¤ГіГѕГ№ГҐГҐ Г§Г Г¤Г Г­ГЁГҐ?')
+            else:
+                con = sg.popup_yes_no('ГЌГҐГўГҐГ°Г­Г»Г© Г®ГІГўГҐГІ \n Г‡Г ГЇГіГ±ГІГЁГІГј Г±Г«ГҐГ¤ГіГѕГ№ГҐГҐ Г§Г Г¤Г Г­ГЁГҐ?')
+        else:
+            con = sg.popup_yes_no('ГЌГҐГўГҐГ°Г­Г»Г© Г®ГІГўГҐГІ \n Г‡Г ГЇГіГ±ГІГЁГІГј Г±Г«ГҐГ¤ГіГѕГ№ГҐГҐ Г§Г Г¤Г Г­ГЁГҐ?')
     return con
 
 
 def generate():
-    data = []
+    task_data = []
     row = ['X']
     for i in range(4):
         item = rd.randint(-10, 10)
         row.append(item)
-    data.append(row.copy())
+    task_data.append(row.copy())
     row = ['p']
     m = 0
     m2 = 0
@@ -28,52 +40,52 @@ def generate():
         item = float('{:.2f}'.format(rd.uniform(0.01, n-0.03)))
         row.append(item)
         n = n - item
-        m = data[0][i+1] * item + m
-        m2 = data[0][i+1]**2 * item + m2
+        m = task_data[0][i+1] * item + m
+        m2 = task_data[0][i+1]**2 * item + m2
     row.append(float('{:.2f}'.format(n)))
-    data.append(row.copy())
+    task_data.append(row.copy())
     row.clear()
-    m = data[0][4] * n + m
-    m2 = data[0][4]**2 * n + m2
+    m = task_data[0][4] * n + m
+    m2 = task_data[0][4]**2 * n + m2
     s = float('{:.2f}'.format((m2 - m**2)**0.5))
-    data.append(s)
-    return data
+    task_data.append(s)
+    return task_data
 
 
-def fill_table(data, window):
+def fill_table(task_data, window):
     window['-ANSWER-'].Update('')
     for j in range(2):
         for i in range(5):
-            window[str(j*5+i+1)].Update(data[j][i])
+            window[str(j*5+i+1)].Update(task_data[j][i])
 
 
-def main(): 
-    data = generate()
+def main(show_res): 
+    task_data = generate()
 
-    data_table = [sg.Text(key = '-TABLE-')]
+    task_data_table = [sg.Text(key = '-TABLE-')]
 
     for j in range(2):
         row = []
         for i in range(5):
-            row.append(sg.Text(data[j][i], 
+            row.append(sg.Text(task_data[j][i], 
                  key = str(j*5+i+1),
                  size=(4,1), 
                  background_color='#808080', 
                  pad=(1,1)))
-        data_table.append(row)
+        task_data_table.append(row)
 
     layout = [
          [
-             sg.Text('Найти среднее квадратическое отклонение \n дискретной случайной величины Х, заданной \n законом распределения в таблице. \n Округлите ответ до 2 знаков после запятой.',
+             sg.Text('ГЌГ Г©ГІГЁ Г±Г°ГҐГ¤Г­ГҐГҐ ГЄГўГ Г¤Г°Г ГІГЁГ·ГҐГ±ГЄГ®ГҐ Г®ГІГЄГ«Г®Г­ГҐГ­ГЁГҐ \n Г¤ГЁГ±ГЄГ°ГҐГІГ­Г®Г© Г±Г«ГіГ·Г Г©Г­Г®Г© ГўГҐГ«ГЁГ·ГЁГ­Г» Г•, Г§Г Г¤Г Г­Г­Г®Г© \n Г§Г ГЄГ®Г­Г®Г¬ Г°Г Г±ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГї Гў ГІГ ГЎГ«ГЁГ¶ГҐ. \n ГЋГЄГ°ГіГЈГ«ГЁГІГҐ Г®ГІГўГҐГІ Г¤Г® 2 Г§Г­Г ГЄГ®Гў ГЇГ®Г±Г«ГҐ Г§Г ГЇГїГІГ®Г©.',
                     size=(40, 4),
                     font='Helvetica')
          ],
          [
-             data_table
+             task_data_table
          ],
          [
              sg.Input(key='-ANSWER-', size=(10, 1)),
-             sg.Button('Ответить',
+             sg.Button('ГЋГІГўГҐГІГЁГІГј',
                    enable_events=True, 
                    key='-FUNCTION-', 
                    font='Helvetica')
@@ -83,8 +95,12 @@ def main():
     window = sg.Window('Window', layout)
 
     stop_event = threading.Event()
-    eeg_receiver.prepare()
-    grab_thread = threading.Thread(target=eeg_receiver.grab_data, args=(stop_event,))
+    lock = threading.Lock()
+    info = eeg_receiver.get_information()
+    eeg_receiver.prepare(len(info)-1)
+    eeg_events = np.array(list([str(1),'start task'])).reshape(1,2)
+    shape = 0
+    grab_thread = threading.Thread(target=eeg_receiver.grab_data, args=(stop_event, lock))
     grab_thread.start()
 
     while True:
@@ -94,18 +110,42 @@ def main():
             if values['-ANSWER-'] == '':
                 continue
             try:
-                con = func(float(values['-ANSWER-']), data[2])
+                with lock:
+                    shape = eeg_receiver.get_data().shape[1]
+                new_e = np.array(list([str(shape),'answer'])).reshape(1,2)
+                eeg_events = np.concatenate((eeg_events,new_e),axis=0)
+
+                con = res_check(float(values['-ANSWER-']), task_data[2], show_res)
+
+                with lock:
+                    shape = eeg_receiver.get_data().shape[1]
+                new_e = np.array(list([str(shape),'end task'])).reshape(1,2)
+                eeg_events = np.concatenate((eeg_events,new_e),axis=0)
+
                 if con == "No":
                     break
                 else:
-                    data = generate()
-                    fill_table(data, window)
+                    task_data = generate()
+                    fill_table(task_data, window)
+
+                    with lock:
+                        shape = eeg_receiver.get_data().shape[1]
+                    new_e = np.array(list([str(shape),'start task'])).reshape(1,2)
+                    eeg_events = np.concatenate((eeg_events,new_e),axis=0)
             except:
-                sg.PopupOK('Используйте точку, как разделитель')
+                lastElementIndex = len(eeg_events)-1
+                eeg_events = eeg_events[:lastElementIndex]
+                sg.PopupOK('Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ ГІГ®Г·ГЄГі, ГЄГ ГЄ Г°Г Г§Г¤ГҐГ«ГЁГІГҐГ«Гј')
 
         if event == sg.WIN_CLOSED:
+            eeg_events
             break
 
+    eeg_data = np.empty(shape=[6,1])
+    with lock:
+        eeg_data = eeg_receiver.get_data()
     stop_event.set()
     grab_thread.join()
+
+    edf_writer.write_data(info, eeg_data, eeg_events)
     window.Close()

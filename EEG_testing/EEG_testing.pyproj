@@ -23,6 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="edf_writer.py" />
     <Compile Include="eeg_receiver.py" />
     <Compile Include="testing_disp.py" />
     <Compile Include="testing_main.py" />
