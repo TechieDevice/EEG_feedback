@@ -10,18 +10,18 @@ import edf_writer
 def res_check(value, s, show_res):
     if show_res == True:
         if value == s:
-            con = sg.popup_yes_no('Âåðíûé îòâåò \n Çàïóñòèòü ñëåäóþùåå çàäàíèå?')
+            con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?')
         else:
-            con = sg.popup_yes_no('Íåâåðíûé îòâåò, âåðíûé = {} \n Çàïóñòèòü ñëåäóþùåå çàäàíèå?'.format(s))
+            con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s))
     else:
         if value == s:
             rnd = rd.randint(1, 10)
             if rnd > 3:
                 con = sg.popup_yes_no('Âåðíûé îòâåò \n Çàïóñòèòü ñëåäóþùåå çàäàíèå?')
             else:
-                con = sg.popup_yes_no('Íåâåðíûé îòâåò \n Çàïóñòèòü ñëåäóþùåå çàäàíèå?')
+                con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?')
         else:
-            con = sg.popup_yes_no('Íåâåðíûé îòâåò \n Çàïóñòèòü ñëåäóþùåå çàäàíèå?')
+            con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?')
     return con
 
 
@@ -76,7 +76,7 @@ def main(show_res):
 
     layout = [
          [
-             sg.Text('Íàéòè ñðåäíåå êâàäðàòè÷åñêîå îòêëîíåíèå \n äèñêðåòíîé ñëó÷àéíîé âåëè÷èíû Õ, çàäàííîé \n çàêîíîì ðàñïðåäåëåíèÿ â òàáëèöå. \n Îêðóãëèòå îòâåò äî 2 çíàêîâ ïîñëå çàïÿòîé.',
+             sg.Text('Найти среднее квадратическое отклонение \n дискретной случайной величины Х, заданной \n законом распределения в таблице. \n Округлите ответ до 2 знаков после запятой.',
                     size=(40, 4),
                     font='Helvetica')
          ],
@@ -85,7 +85,7 @@ def main(show_res):
          ],
          [
              sg.Input(key='-ANSWER-', size=(10, 1)),
-             sg.Button('Îòâåòèòü',
+             sg.Button('Ответить',
                    enable_events=True, 
                    key='-FUNCTION-', 
                    font='Helvetica')
@@ -135,7 +135,7 @@ def main(show_res):
             except:
                 lastElementIndex = len(eeg_events)-1
                 eeg_events = eeg_events[:lastElementIndex]
-                sg.PopupOK('Èñïîëüçóéòå òî÷êó, êàê ðàçäåëèòåëü')
+                sg.PopupOK('Используйте точку, как разделитель')
 
         if event == sg.WIN_CLOSED:
             eeg_events
