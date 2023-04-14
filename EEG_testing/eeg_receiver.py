@@ -29,7 +29,7 @@ def grab_data(stop_event, lock):
     while True:
         r = requests.get('http://127.0.0.1:2336/grabRawData')
         json_r = json.loads(r.text)
-        new_data = json_r["data"]
+        new_data = np.array(json_r["data"])
         if len(new_data[0]) == 0:
             continue
         

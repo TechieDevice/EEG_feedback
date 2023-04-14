@@ -1,9 +1,14 @@
 import numpy as np
 import os
 import pyedflib
+import json
+from datetime import datetime
+
 
 def write_data(info, eeg_data, eeg_events):
-    file = os.path.join('.', 'test_generator.edf')
+    date = current_dateTime = datetime.now()
+    filename = 'eeg-{}.edf'.format(date.strftime("%d-%m-%y_%H-%M"))
+    file = os.path.join('.', filename)
     writer = pyedflib.EdfWriter(file, len(info)-1, file_type=pyedflib.FILETYPE_EDFPLUS)
 
     channel_info = []
@@ -27,3 +32,9 @@ def write_data(info, eeg_data, eeg_events):
         writer.writeAnnotation(int(ev[0])/int(info[0]), -1, ev[1])
 
     writer.close()
+
+    with open('data-{}.json'.format(date.strftime("%d-%m-%y_%H-%M")), 'w', encoding='utf-8') as f:
+        json.dump(eeg_data.tolist(), f, 
+                  separators=(',', ':'), 
+                  sort_keys=True, 
+                  indent=4)
