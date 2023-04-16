@@ -135,4 +135,3 @@ bin
 variables
 file.npy
 *.npd
-*.edf

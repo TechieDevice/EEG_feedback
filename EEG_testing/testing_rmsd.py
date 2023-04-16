@@ -7,37 +7,44 @@ import eeg_receiver
 import edf_writer
 
 
-def res_check(value, s, show_res):
-    if show_res == True:
-        if value == s:
+def res_check(value, s, show_res, eeg_events, lock):
+    with lock:
+            shape = eeg_receiver.get_data().shape[1]
+    if value == s:
+        if show_res == True:
+            new_e = np.array(list([str(shape),'right_answer'])).reshape(1,2)
             con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?',
-                                  background_color='#DAE0E6',
-                                  text_color='#444444',
-                                  button_color='#444444 on #BDD0D6')
+                                    background_color='#DAE0E6',
+                                    text_color='#444444',
+                                    button_color='#444444 on #BDD0D6')
         else:
-            con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s),
-                                  background_color='#DAE0E6',
-                                  text_color='#444444',
-                                  button_color='#444444 on #BDD0D6')
-    else:
-        if value == s:
             rnd = rd.randint(1, 10)
             if rnd > 3:
+                new_e = np.array(list([str(shape),'right_answer'])).reshape(1,2)
                 con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?',
                                       background_color='#DAE0E6',
                                       text_color='#444444',
                                       button_color='#444444 on #BDD0D6')
             else:
+                new_e = np.array(list([str(shape),'fake_wrong_answer'])).reshape(1,2)
                 con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?',
+                                      background_color='#DAE0E6',
+                                      text_color='#444444',
+                                      button_color='#444444 on #BDD0D6')
+    else:
+        new_e = np.array(list([str(shape),'wrong_answer'])).reshape(1,2)
+        if show_res == True:
+            con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s),
                                       background_color='#DAE0E6',
                                       text_color='#444444',
                                       button_color='#444444 on #BDD0D6')
         else:
             con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?',
-                                  background_color='#DAE0E6',
-                                  text_color='#444444',
-                                  button_color='#444444 on #BDD0D6')
-    return con
+                                    background_color='#DAE0E6',
+                                    text_color='#444444',
+                                    button_color='#444444 on #BDD0D6')
+    eeg_events = np.concatenate((eeg_events,new_e),axis=0)
+    return con, eeg_events
 
 
 def generate():
@@ -128,12 +135,7 @@ def main(show_res):
             if values['-ANSWER-'] == '':
                 continue
             try:
-                with lock:
-                    shape = eeg_receiver.get_data().shape[1]
-                new_e = np.array(list([str(shape),'answer'])).reshape(1,2)
-                eeg_events = np.concatenate((eeg_events,new_e),axis=0)
-
-                con = res_check(float(values['-ANSWER-']), task_data[2], show_res)
+                con, eeg_events = res_check(float(values['-ANSWER-']), task_data[2], show_res, eeg_events, lock)
 
                 with lock:
                     shape = eeg_receiver.get_data().shape[1]
