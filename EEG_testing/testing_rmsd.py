@@ -12,7 +12,7 @@ def res_check(value, s, show_res, eeg_events, lock):
             shape = eeg_receiver.get_data().shape[1]
     if value == s:
         if show_res == True:
-            new_e = np.array(list([str(shape),'right_answer'])).reshape(1,2)
+            new_e = np.array(list([str(shape),'right answer'])).reshape(1,2)
             con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?',
                                     background_color='#DAE0E6',
                                     text_color='#444444',
@@ -20,19 +20,19 @@ def res_check(value, s, show_res, eeg_events, lock):
         else:
             rnd = rd.randint(1, 10)
             if rnd > 3:
-                new_e = np.array(list([str(shape),'right_answer'])).reshape(1,2)
+                new_e = np.array(list([str(shape),'right answer'])).reshape(1,2)
                 con = sg.popup_yes_no('Верный ответ \n Запустить следующее задание?',
                                       background_color='#DAE0E6',
                                       text_color='#444444',
                                       button_color='#444444 on #BDD0D6')
             else:
-                new_e = np.array(list([str(shape),'fake_wrong_answer'])).reshape(1,2)
+                new_e = np.array(list([str(shape),'fake wrong answer'])).reshape(1,2)
                 con = sg.popup_yes_no('Неверный ответ \n Запустить следующее задание?',
                                       background_color='#DAE0E6',
                                       text_color='#444444',
                                       button_color='#444444 on #BDD0D6')
     else:
-        new_e = np.array(list([str(shape),'wrong_answer'])).reshape(1,2)
+        new_e = np.array(list([str(shape),'wrong answer'])).reshape(1,2)
         if show_res == True:
             con = sg.popup_yes_no('Неверный ответ, верный = {} \n Запустить следующее задание?'.format(s),
                                       background_color='#DAE0E6',
@@ -120,15 +120,19 @@ def main(show_res):
 
     window = sg.Window('Root mean square deviation', layout, background_color='#DAE0E6')
 
+    info = eeg_receiver.get_information()
+    if len(info) == 0:
+        sg.PopupOK('Отсутствует соединение с NeuroPlayPro')
+        return
+    eeg_receiver.prepare(len(info)-1)
+    
+    eeg_events = np.array(list([str(1),'start task'])).reshape(1,2)
     stop_event = threading.Event()
     lock = threading.Lock()
-    info = eeg_receiver.get_information()
-    eeg_receiver.prepare(len(info)-1)
-    eeg_events = np.array(list([str(1),'start task'])).reshape(1,2)
-    shape = 0
     grab_thread = threading.Thread(target=eeg_receiver.grab_data, args=(stop_event, lock))
     grab_thread.start()
 
+    shape = 0
     while True:
         event, values = window.read()
         if event == '-FUNCTION-':
@@ -158,6 +162,9 @@ def main(show_res):
                 sg.PopupOK('Используйте точку, как разделитель')
 
         if event == sg.WIN_CLOSED:
+            with lock:
+                shape = eeg_receiver.get_data().shape[1]
+            new_e = np.array(list([str(shape),'cancel'])).reshape(1,2)
             break
 
     eeg_data = np.empty(shape=[6,1])
