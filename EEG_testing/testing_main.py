@@ -2,10 +2,16 @@
 import PySimpleGUI as sg
 import numpy as np
 import testing_rmsd
+import testing_baes
 
-def disp_window(window, show_res):
+def start_rmsd(window, show_res):
     window.Hide()
     testing_rmsd.main(show_res)
+    window.UnHide()
+
+def start_baes(window, show_res):
+    window.Hide()
+    testing_baes.main(show_res)
     window.UnHide()
 
 
@@ -21,9 +27,32 @@ layout = [
      [
         sg.Button('Начать',
                enable_events=True, 
-               key='-START-', 
+               key='-START-RMSD-', 
                font='Helvetica',
                button_color='#444444 on #BDD0D6')
+     ],
+     [
+         sg.Text('Задание на формулу Байеса', 
+                 size=(45, 1), 
+                 key='-text-', 
+                 font='Helvetica',
+                 background_color='#DAE0E6',
+                 text_color='#444444')
+     ],
+     [
+        sg.Button('Начать',
+               enable_events=True, 
+               key='-START-BAES-', 
+               font='Helvetica',
+               button_color='#444444 on #BDD0D6')
+     ],
+     [
+         sg.Text(' ', 
+                 size=(45, 3), 
+                 key='-text-', 
+                 font='Helvetica',
+                 background_color='#DAE0E6',
+                 text_color='#444444')
      ],
      [
         sg.Checkbox('Показывать ответ?',
@@ -41,9 +70,12 @@ def main():
         event, values = window.Read()
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        if event == '-START-':
+        if event == '-START-RMSD-':
             show_res = values['show_res']
-            disp_window(window, show_res)
+            start_rmsd(window, show_res)
+        if event == '-START-BAES-':
+            show_res = values['show_res']
+            start_baes(window, show_res)
 
     window.Close()
 

@@ -13,6 +13,8 @@
     <RootNamespace>EEG_testing</RootNamespace>
     <IsWindowsApplication>True</IsWindowsApplication>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +27,8 @@
   <ItemGroup>
     <Compile Include="edf_writer.py" />
     <Compile Include="eeg_receiver.py" />
+    <Compile Include="testing_baes.py" />
+    <Compile Include="testing_regr.py" />
     <Compile Include="testing_rmsd.py" />
     <Compile Include="testing_main.py" />
   </ItemGroup>

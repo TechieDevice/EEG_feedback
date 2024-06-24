@@ -34,7 +34,7 @@ def grab_data(stop_event, lock):
         try:
             r = requests.get('http://127.0.0.1:2336/grabRawData')
         except:
-            time.sleep(1)
+            time.sleep(2)
             repeat += 1
             if repeat >= 3:
                 ans = sg.popup_yes_no('Соединение потеряно. \n Повторить попытку соединения?',
