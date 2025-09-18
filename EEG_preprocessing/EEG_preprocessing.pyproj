@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>6a4bf72f-d4e9-418f-822b-83d920986c39</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>EEG_preprocessing.py</StartupFile>
+    <StartupFile>programm.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -13,6 +13,7 @@
     <RootNamespace>EEG_preprocessing</RootNamespace>
     <InterpreterId>MSBuild|env|C:\Users\Ilya\Documents\GitHub\EEG_feedback\EEG_testing\EEG_testing.pyproj</InterpreterId>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EEG_preprocessing.py" />
+    <Compile Include="programm.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="MSBuild|env|C:\Users\Ilya\Documents\GitHub\EEG_feedback\EEG_testing\EEG_testing.pyproj" />

@@ -7,6 +7,10 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "EEG_testing", "EEG_testing\
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "EEG_preprocessing", "EEG_preprocessing\EEG_preprocessing.pyproj", "{6A4BF72F-D4E9-418F-822B-83D920986C39}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Frames_preprocess", "Frames_preprocess\Frames_preprocess.pyproj", "{08F821F5-C2DE-47AD-B00E-E0EDE982E37E}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "EEG_waves_det", "EEG_waves_det\EEG_waves_det.pyproj", "{2290FE7E-62CE-4DEB-8C31-E3AFFBD3A193}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +21,10 @@ Global
 		{5FF10DD5-CA06-4CB0-A206-F7434C7D9695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A4BF72F-D4E9-418F-822B-83D920986C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A4BF72F-D4E9-418F-822B-83D920986C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08F821F5-C2DE-47AD-B00E-E0EDE982E37E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08F821F5-C2DE-47AD-B00E-E0EDE982E37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2290FE7E-62CE-4DEB-8C31-E3AFFBD3A193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2290FE7E-62CE-4DEB-8C31-E3AFFBD3A193}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
